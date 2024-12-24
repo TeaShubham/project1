@@ -1,0 +1,49 @@
+main:
+ EditText ed1,ed2;
+    Button btn1,btn2;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+
+             ed1 =(EditText) findViewById(R.id.ED1);
+            ed2 =(EditText) findViewById(R.id.ED2);
+             btn1 = (Button) findViewById(R.id.BTNsum);
+             btn2 =(Button) findViewById(R.id.BTNavg);
+
+            btn1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    double num1 = Double.parseDouble(ed1.getText().toString());
+                    double num2 = Double.parseDouble(ed2.getText().toString());
+                    double sum = num1 + num2;
+
+                    Intent intent=new Intent(getApplicationContext(),secondactivity.class);
+                    intent.putExtra("RESULT", "Sum: " + sum);
+                    startActivity(intent);
+                }
+            });
+
+            btn2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    double num1 = Double.parseDouble(ed1.getText().toString());
+                    double num2 = Double.parseDouble(ed2.getText().toString());
+                    double average = (num1 + num2) / 2;
+
+                    Intent intent=new Intent(getApplicationContext(),secondactivity.class);
+                    intent.putExtra("RESULT", "Average: " + average);
+                    startActivity(intent);
+                }
+            });
+------------------------------------------------------
+2nd
+TextView resultText = findViewById(R.id.RESULT_TEXT);
+
+        Intent intent = getIntent();
+        String result = intent.getStringExtra("RESULT");
+        resultText.setText(result);

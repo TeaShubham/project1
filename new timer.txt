@@ -1,0 +1,138 @@
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText timerInput;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        timerInput = findViewById(R.id.timer_input);
+        Button startButton = findViewById(R.id.start_button);
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String input = timerInput.getText().toString();
+                if (!input.isEmpty()) {
+                    long duration = Long.parseLong(input);
+                    Intent intent = new Intent(getApplicationContext(), TimerActivity.class);
+                    intent.putExtra("TIMER_DURATION", duration);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+}
+
+
+
+2nd 
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class TimerActivity extends AppCompatActivity {
+
+    private CountDownTimer countDownTimer;
+    private long timeLeftInMillis;
+    private TextView elapsedTimeView;
+    private TextView remainingTimeView;
+    private boolean timerRunning = false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_timer);
+
+        elapsedTimeView = findViewById(R.id.elapsed_time);
+        remainingTimeView = findViewById(R.id.remaining_time);
+
+        
+        long duration = getIntent().getLongExtra("TIMER_DURATION", 60) * 1000; // seconds to milliseconds
+        timeLeftInMillis = duration;
+
+        startTimer();
+    }
+
+    private void startTimer() {
+        if (timerRunning) return;
+
+        countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
+            private long elapsedTime = 0;
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                elapsedTime += 1000;
+                timeLeftInMillis = millisUntilFinished;
+                updateUI(elapsedTime, millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                timerRunning = false;
+                updateUI(elapsedTime, 0);
+            }
+        }.start();
+
+        timerRunning = true;
+    }
+
+    private void updateUI(long elapsedTime, long millisUntilFinished) {
+        elapsedTimeView.setText("Elapsed Time: " + (elapsedTime / 1000) + "s");
+        remainingTimeView.setText("Remaining Time: " + (millisUntilFinished / 1000) + "s");
+    }
+}
+
+
+xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/timer_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter time in seconds"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Timer" />
+</LinearLayout>
+
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/elapsed_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Elapsed Time: 0s"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/remaining_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remaining Time: 60s"
+        android:textSize="18sp" />
+</LinearLayout>

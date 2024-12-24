@@ -1,0 +1,107 @@
+MAIN 1:
+package com.example.cultural_activity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class MainActivity extends AppCompatActivity {
+    EditText ed1,ed2,ed3,ed4,ed5;
+    Button btn;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+
+        ed1 = findViewById(R.id.ED1);
+        ed2 = findViewById(R.id.ED2);
+        ed3 = findViewById(R.id.ED3);
+        ed4 = findViewById(R.id.ED4);
+        ed5 = findViewById(R.id.ED5);
+        btn = findViewById(R.id.BTN1);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("fname", ed1.getText().toString());
+                bundle.putString("mname", ed2.getText().toString());
+                bundle.putString("lname", ed3.getText().toString());
+                bundle.putString("address", ed4.getText().toString());
+                bundle.putString("email", ed5.getText().toString());
+
+                Intent intent = new Intent(getApplicationContext(), SecondActivity.class);
+                intent.putExtras(bundle); 
+                startActivity(intent);
+            }
+        });
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+}
+--------------------------------------------
+2ND MAIN
+package com.example.cultural_activity;
+
+import android.os.Bundle;
+import android.widget.TextView;
+import android.content.Intent;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class SecondActivity extends AppCompatActivity {
+    TextView tv1,tv2,tv3,tv4,tv5;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_second);
+        tv1 = findViewById(R.id.TV1);
+        tv2 = findViewById(R.id.TV2);
+        tv3 = findViewById(R.id.TV3);
+        tv4 = findViewById(R.id.TV4);
+        tv5= findViewById(R.id.TV5);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+
+
+
+            String fname = bundle.getString("fname");
+            String mname = bundle.getString("mname");
+            String lname = bundle.getString("lname");
+            String address = bundle.getString("address");
+            String email = bundle.getString("email");
+
+
+            tv1.setText("FirstName: " + fname);
+            tv2.setText("MiddleName: " + mname);
+            tv3.setText("LastName: " + lname);
+            tv4.setText("address: " + address);
+            tv5.setText("email: " + email);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+}

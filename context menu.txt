@@ -1,0 +1,46 @@
+package com.example.contextmenu;
+
+
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private final String[] mobileBrands = {"Samsung", "Apple", "OnePlus", "Xiaomi", "Google"};
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        
+        showBrandDialog();
+    }
+
+    private void showBrandDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a Mobile Brand")
+                .setItems(mobileBrands, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String selectedBrand = mobileBrands[which];
+                        Toast.makeText(MainActivity.this, "Selected: " + selectedBrand, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+}
+
+<TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mobile Brands"
+        android:layout_centerInParent="true"
+        android:textSize="18sp" />
